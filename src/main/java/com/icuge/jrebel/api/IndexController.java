@@ -22,12 +22,12 @@ public class IndexController {
         resp.setContentType("text/html; charset=utf-8");
         resp.setStatus(HttpServletResponse.SC_OK);
 
-        int port = request.getServerPort();
         String html = "<h1>Hello,This is a Jrebel & JetBrains License Server!</h1>";
-        html += "<p>License Server started at http://localhost:" + port;
-        html += "<p>JetBrains Activation address was: <span style='color:red'>http://localhost:" + port + "/";
-        html += "<p>JRebel 7.1 and earlier version Activation address was: <span style='color:red'>http://localhost:" + port + "/{tokenname}</span>, with any email.";
-        html += "<p>JRebel 2018.1 and later version Activation address was: http://localhost:" + port + "/{guid}(eg:<span style='color:red'>http://localhost:" + port + "/"+ UUID.randomUUID().toString()+"</span>), with any email.";
+        html += "<p>License Server started at http://jrebel.icuge.com";
+        html += "<p>JetBrains Activation address was: <span style='color:red'>http://idea.icuge.com";
+        html += "<p>JRebel 7.1 and earlier version Activation address was: <span style='color:red'>http://jrebel.icuge.com/{tokenname}</span>, with any email.";
+        html += "<p>JRebel 2018.1 and later version Activation address was: http://jrebel.icuge.com/{guid}(eg:<span style='color:red'>http://jrebel.icuge.com/"+ UUID.randomUUID().toString()+"</span>), with any email.";
+        html += "<p>Any problem, email to elias@icuge.com<p>";
 
         resp.getWriter().println(html);
     }
