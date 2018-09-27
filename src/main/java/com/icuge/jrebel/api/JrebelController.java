@@ -2,9 +2,7 @@ package com.icuge.jrebel.api;
 
 import com.icuge.jrebel.util.JrebelSign;
 import com.icuge.jrebel.util.RSASign;
-import net.sf.json.JSONObject;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,11 +59,11 @@ public class JrebelController {
     }
 
     @RequestMapping("leases")
-    public void lease(HttpServletResponse response, String randomness, String username, String guid, String offline, Long clientTime,
+    public Map<String, Object> lease(HttpServletResponse response, String randomness, String username, String guid, String offline, Long clientTime,
                                      Long offlineDays) throws Exception {
         Map<String, Object> map = new HashMap<>();
-        String validFrom = "null";
-        String validUntil = "null";
+        String validFrom = null;
+        String validUntil = null;
         boolean ol = Boolean.parseBoolean(offline);
         if (ol) {
             long clinetTimeUntil = clientTime + 180L * 24 * 60 * 60 * 1000;
@@ -91,44 +89,16 @@ public class JrebelController {
         map.put("zeroIds", new String[]{""});
         map.put("licenseValidFrom", 1490544001000L);
         map.put("licenseValidUntil", 1691839999000L);
-        String jsonStr = "{\n" +
-                "    \"serverVersion\": \"3.2.4\",\n" +
-                "    \"serverProtocolVersion\": \"1.1\",\n" +
-                "    \"serverGuid\": \"a1b4aea8-b031-4302-b602-670a990272cb\",\n" +
-                "    \"groupType\": \"managed\",\n" +
-                "    \"id\": 1,\n" +
-                "    \"licenseType\": 1,\n" +
-                "    \"evaluationLicense\": false,\n" +
-                "    \"signature\": \"OJE9wGg2xncSb+VgnYT+9HGCFaLOk28tneMFhCbpVMKoC/Iq4LuaDKPirBjG4o394/UjCDGgTBpIrzcXNPdVxVr8PnQzpy7ZSToGO8wv/KIWZT9/ba7bDbA8/RZ4B37YkCeXhjaixpmoyz/CIZMnei4q7oWR7DYUOlOcEWDQhiY=\",\n" +
-                "    \"serverRandomness\": \"H2ulzLlh7E0=\",\n" +
-                "    \"seatPoolType\": \"standalone\",\n" +
-                "    \"statusCode\": \"SUCCESS\",\n" +
-                "    \"offline\": " + String.valueOf(ol) + ",\n" +
-                "    \"validFrom\": " + validFrom + ",\n" +
-                "    \"validUntil\": " + validUntil + ",\n" +
-                "    \"company\": \"Administrator\",\n" +
-                "    \"orderId\": \"\",\n" +
-                "    \"zeroIds\": [\n" +
-                "        \n" +
-                "    ],\n" +
-                "    \"licenseValidFrom\": 1490544001000,\n" +
-                "    \"licenseValidUntil\": 1691839999000\n" +
-                "}";
-
-        JSONObject jsonObject = JSONObject.fromObject(jsonStr);
         if (randomness == null || username == null || guid == null) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return null;
         } else {
             JrebelSign jrebelSign = new JrebelSign();
             jrebelSign.toLeaseCreateJson(randomness, guid, ol, validFrom, validUntil);
             String signature = jrebelSign.getSignature();
             map.put("signature", signature);
             map.put("company", username);
-            jsonObject.put("signature", signature);
-            jsonObject.put("company", username);
-            String body = jsonObject.toString();
-            response.getWriter().print(body);
-//            return jsonStr;
+            return map;
         }
     }
 

@@ -22,5 +22,4 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'commons-codec:commons-codec:1.10'
     compile 'org.bouncycastle:bcprov-jdk15on:1.58'
-    compile 'net.sf.json-lib:json-lib:2.4:jdk15'
 }
